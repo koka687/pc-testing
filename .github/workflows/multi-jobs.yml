@@ -1,0 +1,28 @@
+name: Multi-Job Lab5 Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_second:
+        description: "Запустити друге завдання? (yes/no)"
+        required: true
+        default: "yes"
+
+jobs:
+  job_one:
+    name: Run First Job (Check Repo)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Print info
+        run: echo "First job executed successfully!"
+
+  job_two:
+    name: Run Second Job (Conditional Check)
+    needs: job_one
+    if: github.event.inputs.run_second == 'yes'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Second step message
+        run: echo "Second job executed because run_second == yes!"
